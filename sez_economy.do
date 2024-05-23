@@ -1,7 +1,9 @@
-cd "/Users/hendrixperalta/Documents"
+*cd "/Users/hendrixperalta/Documents"
 
 *insheet using "data.csv", comma clear
-insheet using "long_df.csv", comma clear
+*insheet using "long_df.csv", comma clear
+import delimited "https://raw.githubusercontent.com/HendrixPeralta/research_data/main/aggregated%20_data/municipalities/long_df.csv", clear
+
 
 drop if year == 2000
 
@@ -18,12 +20,10 @@ gen prep3 = prep^3
 gen sal_tec2 = sqrt(sal_tec)
 rename ntl egdp
 
-misstable summarize
-
 replace emp = cond(missing(emp), cond(missing(l1.emp), 0, l1.emp), emp)
 replace sal_tec2 = 0 if missing(sal_tec2)
 
-
+misstable summarize
 
 * TESTS
 
@@ -103,6 +103,14 @@ quietly estadd local FE_year      "Yes", replace
 esttab mod4 mod5 mod6 mod7, keep(sez lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) label ///
 varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
 
+esttab mod4 mod5 mod6 mod7 using "egdp-sez.tex", replace ///
+    keep(sez lpop urb_ prep temp) ///
+    se label stats(N N_g r2 FE_province FE_year, fmt(0 0 2) label("Observations" "N Provinces" "R-squared" "Province FE" "Year FE")) ///
+    mtitles("EGDP" "EGDP" "EGDP" "EGDP") nonotes ///
+    addnote("Notes: The dependent variable is the homicides per capita." ///
+            "All models include a constant" ///
+            "$* p<0.10, ** p<0.05, *** p<0.01") star(* 0.10 ** 0.05 *** 0.01) b(%7.3f) ///
+	varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
 
 *ent emp tss sal_tec inf ocu ele 
 * eq2 ==========================================================
