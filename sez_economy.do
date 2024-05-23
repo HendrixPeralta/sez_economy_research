@@ -127,13 +127,21 @@ eststo mod10: quietly xtreg egdp sez ent emp tss lpop urb_ prep i.year, fe vce(r
 quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
-eststo mod11: quietly xtreg egdp sez ent emp tss sal_tec inf ocu ele  lpop urb_ prep temp i.year, fe vce(robust)
+eststo mod11: quietly xtreg egdp sez ent emp tss sal_tec2 inf ocu ele  lpop urb_ prep temp i.year, fe vce(robust)
 quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
-esttab mod8 mod9 mod10 mod11, keep(ent emp tss sal_tec inf ocu ele  lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) 
+esttab mod8 mod9 mod10 mod11, keep(ent emp tss sal_tec2 inf ocu ele  lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) 
 *label ///
 *varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
+esttab mod8 mod9 mod10 mod11 using "egdp-sez2.tex", replace ///
+    keep(sez ent emp tss sal_tec2 inf ocu ele  lpop urb_ prep temp) ///
+    se label stats(N N_g r2 FE_province FE_year, fmt(0 0 2) label("Observations" "N Provinces" "R-squared" "Province FE" "Year FE")) ///
+    mtitles("EGDP" "EGDP" "EGDP" "EGDP") nonotes ///
+    addnote("Notes: The dependent variable is the homicides per capita." ///
+            "All models include a constant" ///
+            "$* p<0.10, ** p<0.05, *** p<0.01") star(* 0.10 ** 0.05 *** 0.01) b(%7.3f) ///
+	varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature" ent "Enterprises" emp "Employment" tss "Social Security Payments" sal_tec2 "Wage" inf "Training Payments" ocu "SEZ Land Area" ele "Electricity Payments")
 
 
 xtreg egdp sez lpop urb_ prep temp i.year, fe vce(robust)
