@@ -28,22 +28,24 @@ misstable summarize
 * TESTS
 
 * tests 
-ladder ntl_
-ladder urb_
-ladder temp
-ladder prep
-ladder pop1
-ladder sal_tec
-ladder sal_op
-ladder ocu
-ladder tss
-ladder wat
-ladder inf
-ladder com
-ladder ele
-ladder ent
-ladder emp
 
+/*
+	ladder ntl_
+	ladder urb_
+	ladder temp
+	ladder prep
+	ladder pop1
+	ladder sal_tec
+	ladder sal_op
+	ladder ocu
+	ladder tss
+	ladder wat
+	ladder inf
+	ladder com
+	ladder ele
+	ladder ent
+	ladder emp
+*/
 * local variables 
 /*
 	gen crimepc = crime/lpop
@@ -103,7 +105,7 @@ quietly estadd local FE_year      "Yes", replace
 esttab mod4 mod5 mod6 mod7, keep(sez lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) label ///
 varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
 
-esttab mod4 mod5 mod6 mod7 using "/Users/hendrixperalta/Desktop/sez_economy_research/Exports/egdp-sez.tex", replace ///
+esttab mod4 mod5 mod6 mod7 using "/Users/hendrixperalta/Desktop/egdp-sez.tex", replace ///
     keep(sez lpop urb_ prep temp) ///
     se label stats(N N_g r2 FE_province FE_year, fmt(0 0 2) label("Observations" "N Provinces" "R-squared" "Province FE" "Year FE")) ///
     mtitles("EGDP" "EGDP" "EGDP" "EGDP") nonotes ///
@@ -134,7 +136,7 @@ quietly estadd local FE_year      "Yes", replace
 esttab mod8 mod9 mod10 mod11, keep(ent emp tss sal_tec2 inf ocu ele  lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) 
 *label ///
 *varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
-esttab mod8 mod9 mod10 mod11 using "/Users/hendrixperalta/Desktop/sez_economy_research/Exports/egdp-sez2.tex", replace ///
+esttab mod8 mod9 mod10 mod11 using "/Users/hendrixperalta/Desktop/egdp-sez2.tex", replace ///
     keep(sez ent emp tss sal_tec2 inf ocu ele  lpop urb_ prep temp) ///
     se label stats(N N_g r2 FE_province FE_year, fmt(0 0 2) label("Observations" "N Provinces" "R-squared" "Province FE" "Year FE")) ///
     mtitles("EGDP" "EGDP" "EGDP" "EGDP") nonotes ///
