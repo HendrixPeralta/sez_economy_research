@@ -111,7 +111,7 @@ quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
 esttab mod4 mod5 mod6 mod7, keep(sez lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) label ///
-varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
+varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Precipitation" temp "Temperature")
 
 esttab mod4 mod5 mod6 mod7 using "/Users/hendrixperalta/Desktop/egdp-sez.tex", replace ///
     keep(sez lpop urb_ prep temp) ///
@@ -120,7 +120,7 @@ esttab mod4 mod5 mod6 mod7 using "/Users/hendrixperalta/Desktop/egdp-sez.tex", r
     addnote("Notes: The dependent variable is the homicides per capita." ///
             "All models include a constant" ///
             "$* p<0.10, ** p<0.05, *** p<0.01") star(* 0.10 ** 0.05 *** 0.01) b(%7.3f) ///
-	varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Prepcipitation" temp "Temperature")
+	varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Precipitation" temp "Temperature")
 
 *ent emp tss sal_tec inf ocu ele 
 * eq2 ==========================================================
