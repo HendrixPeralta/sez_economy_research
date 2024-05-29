@@ -18,10 +18,18 @@ gen lpop = ln(pop1)
 gen emp = ob_f_ + tec_f_ + adm_f_ + ob_m_ + tec_m_ + adm_m_
 gen prep3 = prep^3
 gen sal_tec2 = sqrt(sal_tec)
-rename ntl egdp
+*rename ntl egdp
 
 replace emp = cond(missing(emp), cond(missing(l1.emp), 0, l1.emp), emp)
-replace sal_tec2 = 0 if missing(sal_tec2)
+*replace sal_tec2 = 0 if missing(sal_tec2)
+
+by id (year), sort: replace sal_tec2 = sal_tec2[_n-1] if year == 2009 & missing(sal_tec2)
+
+by id (year), sort: replace ob_f_ = ob_f_[_n-1] if year == 2013 & missing(ob_f_)
+by id (year), sort: replace sal_tec2 = sal_tec2[_n-1] if year == 2009 & missing(sal_tec2)
+by id (year), sort: replace sal_tec2 = sal_tec2[_n-1] if year == 2009 & missing(sal_tec2)
+by id (year), sort: replace sal_tec2 = sal_tec2[_n-1] if year == 2009 & missing(sal_tec2)
+by id (year), sort: replace sal_tec2 = sal_tec2[_n-1] if year == 2009 & missing(sal_tec2)
 
 misstable summarize
 
