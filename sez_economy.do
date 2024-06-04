@@ -21,12 +21,13 @@ foreach var in ob_f_ ob_m_ tec_f_ tec_m_ adm_f_ adm_m_ {
 
 destring pop, replace
 gen pop1 = pop/100000 
-gen lpop = ln(pop1)
+gen lpop = ln(pop)
 gen emp = ob_f_ + tec_f_ + adm_f_ + ob_m_ + tec_m_ + adm_m_
 gen prep3 = prep^3
 
+gen lnNTL = ln(ntl+1000)
 gen sqr_egdp = sqrt(egdp)
-gen lnEGDPpc = ln((egdp/(pop/10000)))
+gen lnEGDPpc = ln((egdp/lpop))
 *rename ntl egdp
 rename ntl_ ntl 
 replace emp = cond(missing(emp), cond(missing(l1.emp), 0, l1.emp), emp)
