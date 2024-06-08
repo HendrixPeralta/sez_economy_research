@@ -3,7 +3,7 @@
 *insheet using "data.csv", comma clear
 *insheet using "long_df.csv", comma clear
 clear
-import delimited "https://raw.githubusercontent.com/HendrixPeralta/research_data/main/aggregated%20_data/municipalities/long_df.csv", clear
+import delimited "https://raw.githubusercontent.com/HendrixPeralta/research_data/main/aggregated%20_data/provinces/long_province_sez.csv", clear
 				
 drop if year == 2000
 
@@ -13,23 +13,24 @@ gen sez = 0
 replace sez = 1 if ent > 0
 
 * Replaces the missing values from 2013 with the previous year value
-foreach var in ob_f_ ob_m_ tec_f_ tec_m_ adm_f_ adm_m_ {
-    display `var'
-    by id (year), sort: replace `var' = `var'[_n-1] if year == 2013 & missing(`var')
-}
+*foreach var in ob_f_ ob_m_ tec_f_ tec_m_ adm_f_ adm_m_ {
+ *   display `var'
+  *  by id (year), sort: replace `var' = `var'[_n-1] if year == 2013 & missing(`var')
+*}
 
 
-destring pop, replace
-gen pop1 = pop/100000 
-gen lpop = ln(pop1)
+*destring pop, replace
+*gen pop1 = pop/100000 
+gen lpop = ln(pop)
 gen emp = ob_f_ + tec_f_ + adm_f_ + ob_m_ + tec_m_ + adm_m_
 gen prep3 = prep^3
 
-gen sqr_egdp = sqrt(egdp)
-gen lnEGDPpc = ln((egdp/(pop/10000)))
+gen lnNTL = ln(ntl+1000)
+*gen sqr_egdp = sqrt(egdp)
+gen lnEGDPpc = ln((egdp/lpop))
 *rename ntl egdp
-rename ntl_ ntl 
-replace emp = cond(missing(emp), cond(missing(l1.emp), 0, l1.emp), emp)
+*rename ntl_ ntl 
+*replace emp = cond(missing(emp), cond(missing(l1.emp), 0, l1.emp), emp)
 
 ***** NOT NEEDED
 *---------------------------------------------------------------------------------------------
@@ -106,25 +107,24 @@ varlabels(sez "SEZ")
 
 *vce(robust)
 
-
-eststo mod4: quietly xtreg lnEGDPpc sez lpop i.year, fe vce(robust)
+eststo mod4: quietly xtreg lnNTL sez i.year, fe vce(robust)
 quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
-eststo mod5: quietly xtreg lnEGDPpc sez lpop urb_ i.year, fe vce(robust)
+eststo mod5: quietly xtreg lnNTL sez urb i.year, fe vce(robust)
 quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
-eststo mod6: quietly xtreg lnEGDPpc sez lpop urb_ prep i.year, fe vce(robust)
+eststo mod6: quietly xtreg lnNTL sez urb  i.year, fe vce(robust)
 quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
-eststo mod7: quietly xtreg lnEGDPpc sez lpop urb_ prep temp i.year, fe vce(robust)
+eststo mod7: quietly xtreg lnNTL sez urb temp i.year, fe vce(robust)
 quietly estadd local FE_province  "Yes", replace
 quietly estadd local FE_year      "Yes", replace
 
-esttab mod4 mod5 mod6 mod7, keep(sez lpop urb_ prep temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) label ///
-varlabels(sez "SEZ" lpop "Log Population" urb_ "Urban Land Cover" prep "Precipitation" temp "Temperature" )
+esttab mod4 mod5 mod6 mod7, keep(sez urb temp) b(3) se(3) star(* 0.05 ** 0.01 *** 0.001) label ///
+varlabels(sez "SEZ"  urb "Urban Land Cover"  temp "Temperature" )
 
 esttab mod4 mod5 mod6 mod7 using "/Users/hendrixperalta/Desktop/sez_economy_research/lnegdppc-sez.tex", replace ///
     keep(sez lpop urb_ prep temp) ///
